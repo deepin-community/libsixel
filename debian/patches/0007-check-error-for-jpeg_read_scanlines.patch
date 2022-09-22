@@ -1,0 +1,26 @@
+From: NOKUBI Takatsugu <knok@daionet.gr.jp>
+Date: Fri, 30 Aug 2019 11:33:15 +0900
+Subject: check error for jpeg_read_scanlines
+
+---
+ src/loader.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/loader.c b/src/loader.c
+index cb1e61f..823571d 100644
+--- a/src/loader.c
++++ b/src/loader.c
+@@ -195,7 +195,12 @@ load_jpeg(unsigned char **result,
+ 
+     while (cinfo.output_scanline < cinfo.output_height) {
+         jpeg_read_scanlines(&cinfo, buffer, 1);
+-        memcpy(*result + (cinfo.output_scanline - 1) * row_stride, buffer[0], row_stride);
++        if (cinfo.err->num_warnings > 0) {
++            sixel_helper_set_additional_message(
++                "jpeg_read_scanlines: error/warining occuered.");
++            status = SIXEL_BAD_INPUT;
++            goto end;
++        }        memcpy(*result + (cinfo.output_scanline - 1) * row_stride, buffer[0], row_stride);
+     }
+ 
+     status = SIXEL_OK;

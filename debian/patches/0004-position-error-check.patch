@@ -1,0 +1,23 @@
+From: Takatsugu Nokubi <takatsugu.nokubi@robotfund.co.jp>
+Date: Thu, 25 Jul 2019 16:19:59 +0900
+Subject: position error check
+
+---
+ src/fromsixel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/fromsixel.c b/src/fromsixel.c
+index 7d8390a..1d86858 100644
+--- a/src/fromsixel.c
++++ b/src/fromsixel.c
+@@ -572,6 +572,10 @@ sixel_decode_raw_impl(
+                         image->ncolors = context->color_index;
+                     }
+ 
++                    if (context->pos_x < 0 || context->pos_y < 0) {
++                        status = SIXEL_BAD_INPUT;
++                        goto end;
++                    }
+                     bits = *p - '?';
+ 
+                     if (bits == 0) {

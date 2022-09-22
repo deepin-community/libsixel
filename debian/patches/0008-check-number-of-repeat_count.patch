@@ -1,0 +1,24 @@
+From: NOKUBI Takatsugu <knok@daionet.gr.jp>
+Date: Fri, 30 Aug 2019 11:37:02 +0900
+Subject: check number of repeat_count
+
+---
+ src/fromsixel.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/fromsixel.c b/src/fromsixel.c
+index f451c80..bc7dfbe 100644
+--- a/src/fromsixel.c
++++ b/src/fromsixel.c
+@@ -733,6 +733,11 @@ sixel_decode_raw_impl(
+                 if (context->repeat_count == 0) {
+                     context->repeat_count = 1;
+                 }
++                if (context->repeat_count > 0x7fff) { /* check too huge number
++*/
++                    status = SIXEL_BAD_INPUT;
++                    goto end;
++                }
+                 context->state = PS_DECSIXEL;
+                 context->param = 0;
+                 context->nparams = 0;

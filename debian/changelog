@@ -1,0 +1,95 @@
+libsixel (1.8.6-2) unstable; urgency=medium
+
+  * Add DEP-8 tests, contributed by Dylan Aïssi.
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Thu, 07 May 2020 13:16:19 +0900
+
+libsixel (1.8.6-1) unstable; urgency=medium
+
+  * New upstream (closes: #953115)
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Thu, 05 Mar 2020 15:54:27 +0900
+
+libsixel (1.8.2-2.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * No change source-only upload to allow testing migration.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 20 Sep 2019 10:46:12 -0400
+
+libsixel (1.8.2-2) unstable; urgency=medium
+
+  [ OndÅ™ej NovÃ½ ]
+  * d/copyright: Use https protocol in Format field
+  * d/control: Remove Testsuite field, not needed anymore
+  * d/control: Remove trailing whitespaces
+  * d/control: Add Vcs-* field
+
+  [ NOKUBI Takatsugu ]
+  * d/patches/0001-Add-malloc-size-check.patch: fix CVE-2018-19756
+  * d/patches/0002-assign-default-error-message.patch: fix CVE-2018-19757
+  * d/patches/0003-add-limitation-to-width-and-height.patch: fix CVE-2018-19759
+  * d/patches/0004-position-error-check.patch: fix CVE-2018-19761
+  * d/patches/0005-size-check.patch: fix CVE-2018-19762
+  * d/patches/0006-prevent-to-access-heap-overflow.patch: fix CVE-2018-19763
+  * d/patches/0007-check-error-for-jpeg_read_scanlines.patch: fix CVE-2019-3573
+  * d/patches/0008-check-number-of-repeat_count.patch: fix CVE-2019-3574
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Tue, 06 Aug 2019 14:55:43 +0900
+
+libsixel (1.8.2-1) unstable; urgency=medium
+
+  * New upstream, security fix (closes: #903858)
+    CVE-2018-14073, CVE-2018-14072
+  * d/control: update decian policy from 4.1.3 to 4.1.5
+               change license short name from MIT to Expat
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Mon, 23 Jul 2018 16:29:35 +0900
+
+libsixel (1.8.1-1) unstable; urgency=medium
+
+  * New upstream.
+  * d/libsixel-example.example: change path to avoid nested dir.
+  * d/control: change section from extra to optional.
+               update debian policy from 4.0.0 to 4.1.3
+               remove autotools-dev
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Wed, 11 Jul 2018 16:35:47 +0900
+
+libsixel (1.7.3-1) unstable; urgency=medium
+
+  * New upstream.
+  * New package: libsixel-examples.
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Tue, 22 Aug 2017 17:39:45 +0900
+
+libsixel (1.5.2-2) unstable; urgency=medium
+
+  * Disable python.
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Fri, 04 Sep 2015 06:50:38 +0000
+
+libsixel (1.5.2-1) unstable; urgency=medium
+
+  * New upstream.
+  * Include new OpenGL example.
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Tue, 01 Sep 2015 05:20:17 +0000
+
+libsixel (1.4.2-1) unstable; urgency=medium
+
+  * New upstream.
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Tue, 09 Dec 2014 07:59:57 +0000
+
+libsixel (1.1.2-2) unstable; urgency=medium
+
+  * Add watch file (Closes: #772444)
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Tue, 09 Dec 2014 07:00:33 +0000
+
+libsixel (1.1.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #763424)
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Sat, 27 Sep 2014 17:08:01 +0900

@@ -1,0 +1,24 @@
+From: Takatsugu Nokubi <takatsugu.nokubi@robotfund.co.jp>
+Date: Wed, 24 Jul 2019 15:12:49 +0900
+Subject: prevent to access heap overflow
+
+---
+ src/fromsixel.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/fromsixel.c b/src/fromsixel.c
+index 8cc8ce0..f451c80 100644
+--- a/src/fromsixel.c
++++ b/src/fromsixel.c
+@@ -888,7 +888,10 @@ sixel_decode_raw(
+     }
+ 
+     *ncolors = image.ncolors + 1;
+-    *palette = (unsigned char *)sixel_allocator_malloc(allocator, (size_t)(*ncolors * 3));
++    int alloc_size = *ncolors;
++    if (alloc_size < 256) // memory access range should be 0 <= 255 (in write_png_to_file)
++        alloc_size = 256;
++    *palette = (unsigned char *)sixel_allocator_malloc(allocator, (size_t)(alloc_size * 3));
+     if (palette == NULL) {
+         sixel_allocator_free(allocator, image.data);
+         sixel_helper_set_additional_message(
