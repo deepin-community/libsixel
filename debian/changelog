@@ -1,3 +1,28 @@
+libsixel (1.10.5-1) unstable; urgency=medium
+
+  * New upstream relaese
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Mon, 13 Jan 2025 21:37:51 +0900
+
+libsixel (1.10.3-3) unstable; urgency=medium
+
+  * d/control: change homepage URL, closes: #1003662
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Fri, 14 Jan 2022 08:18:31 +0900
+
+libsixel (1.10.3-2) unstable; urgency=medium
+
+  * d/control: fix build dpendency
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Thu, 13 Jan 2022 12:04:41 +0900
+
+libsixel (1.10.3-1) unstable; urgency=medium
+
+  * New upstream relaase
+  * Work with meson
+
+ -- NOKUBI Takatsugu <knok@daionet.gr.jp>  Wed, 12 Jan 2022 09:50:46 +0000
+
 libsixel (1.8.6-2) unstable; urgency=medium
 
   * Add DEP-8 tests, contributed by Dylan Aïssi.

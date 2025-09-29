@@ -1,10 +1,10 @@
 Source: libsixel
 Priority: optional
 Maintainer: NOKUBI Takatsugu <knok@daionet.gr.jp>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev
+Build-Depends: debhelper (>= 8.0.0), meson
 Standards-Version: 4.1.5
 Section: libs
-Homepage: https://github.com/saitoha/libsixel
+Homepage: https://github.com/libsixel/libsixel
 #Vcs-Git: git://git.debian.org/collab-maint/libsixel.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/libsixel.git;a=summary
 Vcs-Browser: https://salsa.debian.org/debian/libsixel
@@ -54,6 +54,7 @@ Architecture: all
 Section: devel
 Depends: ${misc:Depends}
 Suggests: libsixel-dev
+Multi-Arch: foreign
 Description: DEC SIXEL graphics codec implementation (examples)
  SIXEL is one of image formats for printer and terminal imaging
  introduced by Digital Equipment Corp. (DEC). Its data scheme is
