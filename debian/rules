@@ -17,12 +17,15 @@ LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
 export DEB_BUILD_MAINT_OPTIONS := hardening=+all
 
 %:
-	dh $@
+	dh $@ --buildsystem=meson
 
 override_dh_auto_configure:
 	env CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)" \
-	dh_auto_configure -- \
-	--with-bashcompletiondir=/etc/bash_completion.d \
-	--with-zshcompletiondir=/usr/share/zsh/functions/Completion/Unix \
-	--includedir=/usr/include/sixel \
-	--disable-python
+	dh_auto_configure --buildsystem=meson -- \
+	-Dbashcompletiondir=/etc/bash_completion.d \
+	-Dzshcompletiondir=/usr/share/zsh/functions/Completion/Unix \
+	 -Ddefault_library=both \
+	--includedir=/usr/include/sixel
+
+override_dh_install:
+	dh_install -O --buildsystem=meson
