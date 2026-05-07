@@ -1,3 +1,9 @@
+libsixel (1.10.5-1deepin1) unstable; urgency=medium
+
+  * Fix CVE-2025-61146: memory leak in fromgif.c gif_init_frame function
+
+ -- deepin-ci-robot <packages@deepin.org>  Thu, 07 May 2026 16:43:14 +0800
+
 libsixel (1.10.5-1) unstable; urgency=medium
 
   * New upstream relaese
