@@ -1,3 +1,10 @@
+libsixel (1.10.5-1deepin2) unstable; urgency=medium
+
+  * Fix CVE-2025-9300: heap buffer overflow in encoder.c
+    sixel_debug_print_palette function
+
+ -- deepin-ci-robot <packages@deepin.org>  Thu, 07 May 2026 16:44:27 +0800
+
 libsixel (1.10.5-1deepin1) unstable; urgency=medium
 
   * Fix CVE-2025-61146: memory leak in fromgif.c gif_init_frame function
