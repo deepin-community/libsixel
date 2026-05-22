@@ -1,10 +1,2 @@
-# 0001-Add-malloc-size-check.patch
-# 0002-assign-default-error-message.patch
-# 0003-add-limitation-to-width-and-height.patch
-# 0004-position-error-check.patch
-# 0005-size-check.patch
-# 0006-prevent-to-access-heap-overflow.patch
-# 0007-check-error-for-jpeg_read_scanlines.patch
-# 0008-check-number-of-repeat_count.patch
-CVE-2025-61146.patch
-CVE-2025-9300.patch
+0001-fix-CVE-2026-33021.patch
+0003-fix-CVE-2026-33018.patch

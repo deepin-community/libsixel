@@ -654,20 +654,18 @@ sixel_encoder_do_clip(
     clip_w = encoder->clipwidth;
     clip_h = encoder->clipheight;
 
-    /* adjust clipping width with comparing it to frame width */
-    if (clip_w + clip_x > src_width) {
-        if (clip_x > src_width) {
-            clip_w = 0;
-        } else {
+    /*
+     * Keep clipping math overflow-safe by comparing against
+     * (dimension - offset) instead of evaluating (size + offset).
+     */
+    if (clip_x >= src_width || clip_y >= src_height) {
+        clip_w = 0;
+        clip_h = 0;
+    } else {
+        if (clip_w > src_width - clip_x) {
             clip_w = src_width - clip_x;
         }
-    }
-
-    /* adjust clipping height with comparing it to frame height */
-    if (clip_h + clip_y > src_height) {
-        if (clip_y > src_height) {
-            clip_h = 0;
-        } else {
+        if (clip_h > src_height - clip_y) {
             clip_h = src_height - clip_y;
         }
     }
@@ -1748,11 +1746,76 @@ sixel_encoder_encode_bytes(
     int                 /* in */    ncolors)
 {
     SIXELSTATUS status = SIXEL_FALSE;
-    sixel_frame_t *frame;
+    sixel_frame_t *frame = NULL;
+    unsigned char *owned_pixels = NULL;
+    unsigned char *owned_palette = NULL;
+    size_t pixel_bytes;
+    size_t pixel_total;
+    size_t palette_bytes;
 
     if (encoder == NULL || bytes == NULL) {
         status = SIXEL_BAD_ARGUMENT;
         goto end;
+    }
+
+    pixel_total = (size_t)width * (size_t)height;
+    if (width <= 0 || height <= 0 ||
+            pixel_total / (size_t)width != (size_t)height) {
+        sixel_helper_set_additional_message(
+            "sixel_encoder_encode_bytes: invalid frame dimensions.");
+        status = SIXEL_BAD_INPUT;
+        goto end;
+    }
+    if (width > SIXEL_WIDTH_LIMIT || height > SIXEL_HEIGHT_LIMIT) {
+        sixel_helper_set_additional_message(
+            "sixel_encoder_encode_bytes: frame dimensions exceed limits.");
+        status = SIXEL_BAD_INPUT;
+        goto end;
+    }
+    pixel_bytes = sixel_encoder_compute_frame_size(pixelformat,
+                                                   width,
+                                                   height);
+    if (pixel_bytes == 0) {
+        sixel_helper_set_additional_message(
+            "sixel_encoder_encode_bytes: buffer size overflow.");
+        status = SIXEL_BAD_INPUT;
+        goto end;
+    }
+    owned_pixels = (unsigned char *)sixel_allocator_malloc(
+        encoder->allocator, pixel_bytes);
+    if (owned_pixels == NULL) {
+        sixel_helper_set_additional_message(
+            "sixel_encoder_encode_bytes: sixel_allocator_malloc() failed.");
+        status = SIXEL_BAD_ALLOCATION;
+        goto end;
+    }
+    memcpy(owned_pixels, bytes, pixel_bytes);
+
+    palette_bytes = 0u;
+    if (pixelformat & SIXEL_FORMATTYPE_PALETTE) {
+        if (palette == NULL || ncolors <= 0) {
+            sixel_helper_set_additional_message(
+                "sixel_encoder_encode_bytes: missing palette data.");
+            status = SIXEL_BAD_INPUT;
+            goto end;
+        }
+        palette_bytes = (size_t)ncolors * 3u;
+        if (palette_bytes / 3u != (size_t)ncolors) {
+            sixel_helper_set_additional_message(
+                "sixel_encoder_encode_bytes: palette size overflow.");
+            status = SIXEL_BAD_INPUT;
+            goto end;
+        }
+        owned_palette = (unsigned char *)sixel_allocator_malloc(
+            encoder->allocator, palette_bytes);
+        if (owned_palette == NULL) {
+            sixel_helper_set_additional_message(
+                "sixel_encoder_encode_bytes: "
+            "sixel_allocator_malloc() failed.");
+            status = SIXEL_BAD_ALLOCATION;
+            goto end;
+        }
+        memcpy(owned_palette, palette, palette_bytes);
     }
 
     status = sixel_frame_new(&frame, encoder->allocator);
@@ -1760,11 +1823,13 @@ sixel_encoder_encode_bytes(
         goto end;
     }
 
-    status = sixel_frame_init(frame, bytes, width, height,
-                              pixelformat, palette, ncolors);
+    status = sixel_frame_init(frame, owned_pixels, width, height,
+                              pixelformat, owned_palette, ncolors);
     if (SIXEL_FAILED(status)) {
         goto end;
     }
+    owned_pixels = NULL;
+    owned_palette = NULL;
 
     status = sixel_encoder_encode_frame(encoder, frame, NULL);
     if (SIXEL_FAILED(status)) {
@@ -1802,6 +1867,50 @@ error:
 }
 
 
+
+/* Compute raw byte size of one frame by pixelformat and geometry.
+   Packed formats (1/2/4bpp) require ceil(width * bpp / 8) bytes per row. */
+static size_t
+sixel_encoder_compute_frame_size(
+    int pixelformat,
+    int width,
+    int height)
+{
+    size_t size = 0;
+    int bpp;
+    int depth;
+
+    if (width <= 0 || height <= 0) {
+        goto end;
+    }
+
+    switch (pixelformat) {
+    case SIXEL_PIXELFORMAT_PAL1:
+    case SIXEL_PIXELFORMAT_G1:
+        bpp = 1;
+        break;
+    case SIXEL_PIXELFORMAT_PAL2:
+    case SIXEL_PIXELFORMAT_G2:
+        bpp = 2;
+        break;
+    case SIXEL_PIXELFORMAT_PAL4:
+    case SIXEL_PIXELFORMAT_G4:
+        bpp = 4;
+        break;
+    default:
+        depth = sixel_helper_compute_depth(pixelformat);
+        if (depth <= 0) {
+            goto end;
+        }
+        size = (size_t)width * (size_t)height * (size_t)depth;
+        goto end;
+    }
+
+    size = (((size_t)width * (size_t)bpp + 7UL) / 8UL) * (size_t)height;
+
+end:
+    return size;
+}
 static int
 test2(void)
 {
